@@ -1,15 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ramiz Rahat</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; }
+        /* 1. Background and Text Styling */
+        body { 
+            background-color: black; 
+            color: white; 
+            /* Using Garamond with fallbacks */
+            font-family: "Garamond", "EB Garamond", serif; 
+            font-weight: bold;
+            text-align: center; 
+            padding: 50px 20px;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 50px;
+            letter-spacing: 1px;
+        }
+
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 100px; /* Large gap to make the scroll effect distinct */
+        }
+
+        /* 2. Photo Styling & Initial State */
         .gallery img { 
             width: 80%;       
             max-width: 600px; 
-            margin: 20px 0;   
-            border-radius: 10px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 5px; 
+            transition: transform 0.6s ease, opacity 0.6s ease;
+            
+            /* Initial state: slightly smaller and faded */
+            transform: scale(0.8);
+            opacity: 0.4;
+        }
+
+        /* 3. The "Focus" State (When in the middle) */
+        .gallery img.in-view {
+            transform: scale(1.05); /* Gets slightly larger */
+            opacity: 1;             /* Becomes bright */
         }
     </style>
 </head>
@@ -24,6 +61,30 @@
         <img src="glasses.heic" alt="Tuff">
         <img src="lookup.heic" alt="Cute mf">
     </div>
+
+    <script>
+        // JavaScript to detect when photos are in the middle of the screen
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.6 // Trigger when 60% of the image is visible
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                } else {
+                    entry.target.classList.remove('in-view');
+                }
+            });
+        }, observerOptions);
+
+        // Tell the observer to watch every image in the gallery
+        document.querySelectorAll('.gallery img').forEach(img => {
+            observer.observe(img);
+        });
+    </script>
 
 </body>
 </html>
